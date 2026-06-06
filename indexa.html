@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Pendaftaran Club Pushbike</title>
+  <!-- Tabler Icons untuk UI modern sesuai usecase -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2 class="sr-only">Sistem Pendaftaran Club Pushbike — Platform Manajemen Anggota</h2>
+
+  <!-- AUTH SCREEN (Berdasarkan User.drawio.png) -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="bike-icon">🚲</span>
+        <h1>Club Pushbike</h1>
+        <p>Sistem Pendaftaran Anggota</p>
+      </div>
+      <div class="role-tabs">
+        <button class="role-tab active" onclick="setRole('ortu')"><i class="ti ti-users" aria-hidden="true"></i> Orang Tua</button>
+        <button class="role-tab" onclick="setRole('sekretaris')"><i class="ti ti-briefcase" aria-hidden="true"></i> Sekretaris</button>
+      </div>
+      <div id="login-banner" class="banner banner-danger">
+        <i class="ti ti-alert-circle" aria-hidden="true"></i>
+        <span id="login-err">Username atau password salah</span>
+      </div>
+      <div class="form-group">
+        <label for="inp-user">Username</label>
+        <input type="text" id="inp-user" placeholder="Masukkan username" />
+      </div>
+      <div class="form-group">
+        <label for="inp-pass">Password</label>
+        <input type="password" id="inp-pass" placeholder="Masukkan password" />
+      </div>
+      <button class="btn-primary" onclick="doLogin()"><i class="ti ti-login" aria-hidden="true"></i> Masuk</button>
+      <p class="login-hint">Demo: ortu / ortu123 &nbsp;|&nbsp; sekretaris / sek123</p>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION OVERLAY -->
+  <div id="app">
+    <div class="layout">
+      <!-- SIDEBAR NAVIGASI -->
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <div class="s-title">🚲 Club Pushbike</div>
+          <div class="s-sub">Sistem Pendaftaran</div>
+        </div>
+        <div class="sidebar-role" id="sidebar-role">Menu</div>
+        <div id="nav-menu"></div>
+        <div class="sidebar-footer">
+          <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout" aria-hidden="true"></i> Keluar</button>
+        </div>
+      </nav>
+
+      <!-- MAIN CONTENT SYSTEM -->
+      <main class="main">
+        <header class="topbar">
+          <h2 id="page-title">Beranda</h2>
+          <div class="user-badge">
+  <div class="avatar" id="top-avatar">?</div>
+  <span id="top-name">User</span>
+</div>  
+        </header>
+
+        <div class="content">
+          <!-- PAGE: BERANDA ORG TUA -->
+          <section class="page" id="page-beranda-ortu">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="s-num" id="stat-status-num">1</div>
+                <div class="s-label">Pendaftaran Saya</div>
+                <span class="s-badge badge-warning">Diproses</span>
+              </div>
+              <div class="stat-card">
+                <div class="s-num">2026</div>
+                <div class="s-label">Tahun Aktif</div>
+                <span class="s-badge badge-info">Berjalan</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Alur Status Tracking</h3></div>
+              <div class="card-body-pad">
+                <div class="timeline">
+                  <div class="tl-item">
+                    <div class="tl-dot status-verify-bg"></div>
+                    <div class="tl-content">
+                      <div class="tl-title">Formulir Terkirim ke Database</div>
+                      <div class="tl-time">Menunggu Verifikasi Sekretaris</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- PAGE: FORM PENDAFTARAN (Berdasarkan OrangTua.drawio.png) -->
+          <section class="page" id="page-daftar">
+            <div class="form-card">
+              <h3><i class="ti ti-clipboard-list" aria-hidden="true" style="color:var(--accent)"></i> Formulir Online</h3>
+              <div id="banner-daftar" class="banner banner-success">
+                <i class="ti ti-circle-check" aria-hidden="true"></i>
+                <span>Pendaftaran Berhasil Terpustaka! Silakan cetak bukti dokumen.</span>
+              </div>
+              <div class="form-grid">
+                <div class="form-group full">
+                  <label for="f-namaAnak">Nama Lengkap Anak</label>
+                  <input type="text" id="f-namaAnak" placeholder="Contoh: Arjuna Pratama" />
+                </div>
+                <div class="form-group">
+                  <label for="f-tglLahir">Tanggal Lahir</label>
+                  <input type="date" id="f-tglLahir" />
+                </div>
+                <div class="form-group">
+                  <label for="f-jk">Jenis Kelamin</label>
+                  <select id="f-jk">
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="f-namaOrtu">Nama Orang Tua / Wali</label>
+                  <input type="text" id="f-namaOrtu" placeholder="Nama pengampu" />
+                </div>
+                <div class="form-group">
+                  <label for="f-noHp">Nomor HP / WhatsApp</label>
+                  <input type="text" id="f-noHp" placeholder="08xxxxxxxxxx" />
+                </div>
+                <div class="form-group full">
+                  <label for="f-alamat">Alamat Domisili Lengkap</label>
+                  <textarea id="f-alamat" rows="2" placeholder="Alamat jalan, RT/RW, Kecamatan"></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn-save" onclick="submitDaftar()"><i class="ti ti-send" aria-hidden="true"></i> Kirim Formulir</button>
+                <button class="btn-cancel" onclick="resetDaftar()">Reset</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- PAGE: CETAK BUKTI -->
+          <section class="page" id="page-cetak">
+            <div class="form-card" style="max-width:100%">
+              <h3><i class="ti ti-printer" aria-hidden="true" style="color:var(--accent)"></i> Formulir Lembar Verifikasi</h3>
+              <div id="formulir-preview" class="print-area">
+                <div class="print-header">
+                  <div class="print-title">FORMULIR PENDAFTARAN RESMI CLUB PUSHBIKE</div>
+                  <div class="print-sub">Arsip Dokumen Anggota Baru</div>
+                </div>
+                <table class="table-preview">
+                  <tr><td>ID Registrasi</td><td id="fp-id" class="bold">—</td></tr>
+                  <tr><td>Nama Lengkap Anak</td><td id="fp-nama" class="bold">—</td></tr>
+                  <tr><td>Tanggal Lahir</td><td id="fp-tgl">—</td></tr>
+                  <tr><td>Jenis Kelamin</td><td id="fp-jk">—</td></tr>
+                  <tr><td>Orang Tua / Wali</td><td id="fp-ortu">—</td></tr>
+                  <tr><td>Kontak HP</td><td id="fp-hp">—</td></tr>
+                  <tr><td>Alamat Rumah</td><td id="fp-alamat">—</td></tr>
+                  <tr><td>Status Validasi</td><td><span class="status-badge status-pending" id="fp-status">Menunggu</span></td></tr>
+                </table>
+              </div>
+              <button class="btn-save" onclick="window.print()"><i class="ti ti-printer" aria-hidden="true"></i> Eksekusi Print Dokumen</button>
+            </div>
+          </section>
+
+          <!-- PAGE: BERANDA SEKRETARIS -->
+          <section class="page" id="page-beranda-sek">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="s-num" id="sek-total">0</div>
+                <div class="s-label">Total Pendaftar</div>
+                <span class="s-badge badge-info">Database</span>
+              </div>
+              <div class="stat-card">
+                <div class="s-num" id="sek-pending">0</div>
+                <div class="s-label">Belum Diverifikasi</div>
+                <span class="s-badge badge-warning">Butuh Aksi</span>
+              </div>
+              <div class="stat-card">
+                <div class="s-num" id="sek-aktif">0</div>
+                <div class="s-label">Anggota Aktif</div>
+                <span class="s-badge badge-success">Terverifikasi</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Log Transaksi Pendaftaran Terbaru</h3></div>
+              <table>
+                <thead>
+                  <tr><th>Nama Anak</th><th>Orang Tua/Wali</th><th>Tanggal Input</th><th>Status</th></tr>
+                </thead>
+                <tbody id="sek-recent-table"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- PAGE: KELOLA DATA MASTER (Berdasarkan KelolaDataPendaftaran.drawio.png) -->
+          <section class="page" id="page-kelola">
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="ti ti-database" aria-hidden="true"></i> Manajemen Data Pendaftar</h3>
+                <span id="count-badge" class="chip chip-green"></span>
+              </div>
+              <div class="search-row">
+                <i class="ti ti-search" aria-hidden="true"></i>
+                <input type="text" id="search-inp" placeholder="Cari Nama Anak atau Kode ID..." oninput="renderTable()" />
+              </div>
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr><th>ID</th><th>Nama Anak</th><th>Jenis Kelamin</th><th>Orang Tua</th><th>Kontak</th><th>Status</th><th>Aksi Terintegrasi</th></tr>
+                  </thead>
+                  <tbody id="data-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- PAGE: LAPORAN (Class Diagram: Laporan) -->
+          <section class="page" id="page-laporan">
+            <div class="report-header">
+              <h3>Rekapitulasi Laporan Berkas Pendaftaran</h3>
+              <button class="btn-outline" onclick="generatePDF()"><i class="ti ti-download" aria-hidden="true"></i> Unduh Berkas .PDF</button>
+            </div>
+            <div class="report-summary" id="report-summary"></div>
+            <div class="card">
+              <div class="card-header"><h3>Rincian Keseluruhan Data Anggota</h3></div>
+              <table>
+                <thead>
+                  <tr><th>ID</th><th>Nama Anak</th><th>Tanggal Lahir</th><th>Wali</th><th>Kontak No</th><th>Status Registrasi</th></tr>
+                </thead>
+                <tbody id="laporan-table"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- PAGE: PROFIL -->
+          <section class="page" id="page-profil">
+            <div class="profile-hero">
+              <div class="profile-avatar" id="prof-avatar">?</div>
+              <div>
+                <div class="profile-name" id="prof-name">—</div>
+                <div class="profile-role" id="prof-role">—</div>
+              </div>
+            </div>
+            <div class="form-card">
+              <h3>Detail Kredensial Pengguna</h3>
+              <div class="form-grid">
+                <div class="form-group"><label>Nama Profil</label><input type="text" id="prof-inp-nama" /></div>
+                <div class="form-group"><label>Username Pengenal</label><input type="text" id="prof-inp-user" disabled /></div>
+                <div class="form-group"><label>No Kontak HP</label><input type="text" id="prof-inp-hp" /></div>
+              </div>
+              <div class="form-actions">
+                <button class="btn-save" onclick="alert('Profil Pengguna Berhasil Diperbarui!')">Simpan Perubahan</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- MODAL POPUP: EDIT DATA (KelolaDataPendaftaran.drawio.png) -->
+    <div class="modal-overlay" id="edit-modal">
+      <div class="modal">
+        <button class="close-btn" onclick="closeModal()"><i class="ti ti-x" aria-hidden="true"></i></button>
+        <h3><i class="ti ti-edit" aria-hidden="true" style="color:var(--accent)"></i> Pembaruan Berkas Anggota</h3>
+        <input type="hidden" id="edit-id" />
+        <div class="form-group"><label>Nama Anak</label><input type="text" id="edit-nama" /></div>
+        <div class="form-group"><label>Nama Orang Tua/Wali</label><input type="text" id="edit-ortu" /></div>
+        <div class="form-group"><label>No HP Kontak</label><input type="text" id="edit-hp" /></div>
+        <div class="form-group">
+          <label>Ubah Status Penilaian</label>
+          <select id="edit-status">
+            <option value="Pending">Pending</option>
+            <option value="Aktif">Aktif</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
+        </div>
+       <section class="page" id="page-profil">
+  <div class="profile-hero">
+  <div class="profile-avatar" id="prof-avatar">?</div>
+  <div>
+    <div class="profile-name" id="prof-name">—</div>
+    <div class="profile-role" id="prof-role">—</div>
+  </div>
+</div>
+  <div class="form-card">
+    <h3>Detail Kredensial Pengguna</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>Nama Profil</label><input type="text" id="prof-inp-nama" /></div>
+      <div class="form-group"><label>Username Pengenal</label><input type="text" id="prof-inp-user" disabled /></div>
+      <div class="form-group"><label>No Kontak HP</label><input type="text" id="prof-inp-hp" /></div>
+    </div>
+    <div class="form-actions">
+<button class="btn-save" onclick="saveProfil()">Simpan Perubahan</button>
+    </div>
+  </div>
+</section>
+
+    <!-- MODAL POPUP: HAPUS DATA -->
+    <div class="modal-overlay" id="del-modal">
+      <div class="modal">
+        <button class="close-btn" onclick="closeDelModal()"><i class="ti ti-x" aria-hidden="true"></i></button>
+        <h3 style="color:var(--danger)"><i class="ti ti-trash" aria-hidden="true"></i> Validasi Penghapusan Berkas</h3>
+        <p class="modal-text">Apakah anda yakin untuk menghapus seluruh data pendaftaran dari <strong id="del-nama"></strong> secara permanen?</p>
+        <div class="form-actions">
+          <button class="btn-sm btn-del" style="padding:.6rem 1.2rem;" onclick="confirmDelete()">Konfirmasi Hapus</button>
+          <button class="btn-cancel" onclick="closeDelModal()">Batalkan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
